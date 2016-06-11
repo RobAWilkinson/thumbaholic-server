@@ -12,6 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
+    "mongo": "^0.1.0",
+    "mongodb": "^2.1.18",
+    "mongoose": "^4.4.20",
+    "mongoose-findorcreate": "^0.1.2",
+    "mongoose-geojson-schema": "^2.1.1",
     "ws": "^1.1.0"
   }
 }
