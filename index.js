@@ -6,7 +6,7 @@ var server = require('http').createServer(),
   wss = new WebSocketServer({ server: server }),
   express = require('express'),
   app = express(),
-  port = 4080
+  port = 4080 || process.env.PORT
 let connections = []
 
 let users = []
