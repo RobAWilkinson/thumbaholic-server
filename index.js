@@ -28,9 +28,9 @@ const Location = new mongoose.Schema({
 }, { _id: false })
 var userSchema = new mongoose.Schema({
   id: String,
-  locations: [Location]
+  location: Location
 })
-userSchema.index({ 'locations.point': '2dsphere' })
+userSchema.index({ 'location.point': '2dsphere' })
 userSchema.plugin(findOrCreate)
 
 var User = mongoose.model('users', userSchema)
@@ -53,6 +53,33 @@ var northernHalf = {
   ],
   type: 'Polygon'
 }
+var apple = {
+  'type': 'Polygon',
+  'coordinates': [
+    [
+      [
+        -122.08145141601561,
+        37.14608745948667
+      ],
+      [
+        -122.08145141601561,
+        37.45959832290546
+      ],
+      [
+        -121.67083740234375,
+        37.45959832290546
+      ],
+      [
+        -121.67083740234375,
+        37.14608745948667
+      ],
+      [
+        -122.08145141601561,
+        37.14608745948667
+      ]
+    ]
+  ]
+}
 let connections = []
 let users = []
 app.get('/locations', (req, res) => {
@@ -70,7 +97,7 @@ app.get('/ping', (req, res) => {
   res.send('success')
 })
 app.get('/southern', (req, res) => {
-  User.find({ locations: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+  User.find({ location: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
     if (err) {
       console.log(err)
       return res.send(err)
@@ -81,7 +108,7 @@ app.get('/southern', (req, res) => {
 })
 
 app.get('/northern', (req, res) => {
-  User.find({ locations: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
+  User.find({ location: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
     if (err) {
       console.log(err)
       return res.send(err)
@@ -92,8 +119,22 @@ app.get('/northern', (req, res) => {
 })
 app.get('/stages/:number', (req, res, next) => {
   if (req.params.number == 1) {
-    return User.find({ locations: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
+    return User.find({ location: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
       var area = geojsonArea.geometry(northernHalf)
+
+      if (err) {
+        console.log(err)
+        return res.send(err)
+      } else {
+        console.log(area)
+        console.log()
+        res.json(user)
+      }
+    })
+  }
+  if (req.params.number == 2) {
+    User.find({ location: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+      var area = geojsonArea.geometry(southernHalf)
       if (err) {
         console.log(err)
         return res.send(err)
@@ -102,9 +143,11 @@ app.get('/stages/:number', (req, res, next) => {
       }
     })
   }
-  if (req.params.number == 2) {
-    User.find({ locations: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+  if (req.params.number == 3) {
+    console.log(apple)
+    User.find({ location: { $geoWithin: { $geometry: apple } } }, (err, user) => {
       var area = geojsonArea.geometry(southernHalf)
+      console.log(area)
       if (err) {
         console.log(err)
         return res.send(err)
@@ -129,13 +172,13 @@ wss.on('connection', function connection (ws) {
         console.log(err)
       } else {
         let coordinates = [data.longitude, data.latitude]
-        user.locations.push({
+        user.location = {
           timestamp: Date.now(),
           point: {
             coordinates: coordinates,
             type: 'Point'
           }
-        })
+        }
         user.save(err => {
           if (err) {
             console.log(err)
