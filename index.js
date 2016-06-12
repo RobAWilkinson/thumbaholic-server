@@ -7,6 +7,8 @@ var server = require('http').createServer(),
   express = require('express'),
   app = express(),
   port = process.env.PORT || 4080
+
+var geojsonArea = require('geojson-area')
 var mongoose = require('mongoose')
 var findOrCreate = require('mongoose-findorcreate')
 var GeoJSON = require('mongoose-geojson-schema')
@@ -63,7 +65,7 @@ app.get('/locations', (req, res) => {
 })
 app.get('/ping', (req, res) => {
   connections.forEach(ws => {
-    ws.send('messsage')
+    ws.send('message')
   })
   res.send('success')
 })
@@ -77,6 +79,7 @@ app.get('/southern', (req, res) => {
     }
   })
 })
+
 app.get('/northern', (req, res) => {
   User.find({ locations: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
     if (err) {
@@ -87,9 +90,29 @@ app.get('/northern', (req, res) => {
     }
   })
 })
-
-app.use(function (req, res) {
-  res.send({ msg: 'hello' })
+app.get('/stages/:number', (req, res, next) => {
+  if (req.params.number == 1) {
+    return User.find({ locations: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
+      var area = geojsonArea.geometry(northernHalf)
+      if (err) {
+        console.log(err)
+        return res.send(err)
+      } else {
+        res.json(user)
+      }
+    })
+  }
+  if (req.params.number == 2) {
+    User.find({ locations: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+      var area = geojsonArea.geometry(southernHalf)
+      if (err) {
+        console.log(err)
+        return res.send(err)
+      } else {
+        res.json(user)
+      }
+    })
+  }
 })
 
 wss.on('connection', function connection (ws) {
