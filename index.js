@@ -20,8 +20,6 @@ if (process.env.MONGODB_URI) {
   dbURL = 'mongodb://localhost:27017/thumbaholic'
 }
 mongoose.connect(dbURL)
-mongoose.set('debug', true)
-
 const Location = new mongoose.Schema({
   timestamp: Date,
   point: mongoose.Schema.Types.Point
