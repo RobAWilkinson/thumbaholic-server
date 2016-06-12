@@ -28,7 +28,8 @@ const Location = new mongoose.Schema({
 }, { _id: false })
 var userSchema = new mongoose.Schema({
   id: String,
-  location: Location
+  location: Location,
+  pastLocations: [Location]
 })
 userSchema.index({ 'location.point': '2dsphere' })
 userSchema.plugin(findOrCreate)
@@ -246,6 +247,13 @@ wss.on('connection', function connection (ws) {
         console.log(err)
       } else {
         let coordinates = [data.longitude, data.latitude]
+        user.pastLocations.push({
+          timestamp: Date.now(),
+          point: {
+            coordinates: coordinates,
+            type: 'Point'
+          }
+        })
         user.location = {
           timestamp: Date.now(),
           point: {
