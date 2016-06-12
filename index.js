@@ -211,7 +211,7 @@ app.get('/stages/:number', (req, res, next) => {
         return res.send(err)
       } else {
         // res.json(user)
-        res.json({ value, timestamp: new Date() })
+        res.json({ value: users.length, timestamp: new Date() })
       }
     })
   }
@@ -225,7 +225,7 @@ app.get('/stages/:number', (req, res, next) => {
         return res.send(err)
       } else {
         // res.json(user)
-        res.json({ users.length, timestamp: new Date() })
+        res.json({ value: users.length, timestamp: new Date() })
       }
     })
   }
