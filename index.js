@@ -117,6 +117,7 @@ app.get('/northern', (req, res) => {
   })
 })
 app.get('/stages/:number', (req, res, next) => {
+  var value = [1,2,3][Math.floor(Math.random() * 3)]
   if (req.params.number == 1) {
     return User.find({ 'location.point': { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
       var area = geojsonArea.geometry(northernHalf)
@@ -125,9 +126,7 @@ app.get('/stages/:number', (req, res, next) => {
         console.log(err)
         return res.send(err)
       } else {
-        console.log(area)
-        console.log()
-        res.json({ value: 'hot', timestamp: new Date() })
+        res.json({ value, timestamp: new Date() })
       }
     })
   }
@@ -138,7 +137,8 @@ app.get('/stages/:number', (req, res, next) => {
         console.log(err)
         return res.send(err)
       } else {
-        res.json(user)
+        // res.json(user)
+        res.json({ value, timestamp: new Date() })
       }
     })
   }
@@ -151,7 +151,9 @@ app.get('/stages/:number', (req, res, next) => {
         console.log(err)
         return res.send(err)
       } else {
-        res.json(user)
+        // res.json(user)
+        res.json({ value, timestamp: new Date() })
+      }
       }
     })
   }
