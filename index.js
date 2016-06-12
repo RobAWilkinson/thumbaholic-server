@@ -199,7 +199,7 @@ app.get('/stages/:number', (req, res, next) => {
         console.log(err)
         return res.send(err)
       } else {
-        res.json({ value: users.length, timestamp: new Date() })
+        res.json({ value: users.length + 1, timestamp: new Date() })
       }
     })
   }
@@ -211,7 +211,7 @@ app.get('/stages/:number', (req, res, next) => {
         return res.send(err)
       } else {
         // res.json(user)
-        res.json({ value: users.length, timestamp: new Date() })
+        res.json({ value: users.length + 1, timestamp: new Date() })
       }
     })
   }
@@ -226,7 +226,7 @@ app.get('/stages/:number', (req, res, next) => {
       } else {
         console.log(users)
         // res.json(user)
-        res.json({ value: users.length, timestamp: new Date() })
+        res.json({ value: users.length + 1, timestamp: new Date() })
       }
     })
   }
