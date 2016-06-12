@@ -91,6 +91,7 @@ app.get('/locations', (req, res) => {
   })
 })
 app.get('/ping', (req, res) => {
+  console.log(connections.length)
   connections.forEach(ws => {
     ws.send('message')
   })
