@@ -53,6 +53,33 @@ var northernHalf = {
   ],
   type: 'Polygon'
 }
+var ardon = {
+  'type': 'Polygon',
+  'coordinates': [
+    [
+      [
+        -118.02980303764343,
+        33.95136115118262
+      ],
+      [
+        -118.02841901779173,
+        33.95065807213534
+      ],
+      [
+        -118.02875161170961,
+        33.95020863248585
+      ],
+      [
+        -118.0302107334137,
+        33.95081826787224
+      ],
+      [
+        -118.02980303764343,
+        33.95136115118262
+      ]
+    ]
+  ]
+}
 var apple = {
   'type': 'Polygon',
   'coordinates': [
@@ -97,6 +124,16 @@ app.get('/ping', (req, res) => {
 })
 app.get('/southern', (req, res) => {
   User.find({ location: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+    if (err) {
+      console.log(err)
+      return res.send(err)
+    } else {
+      res.json(user)
+    }
+  })
+})
+app.get('/ardon' , (req, res) => {
+  User.find({ location: { $geoWithin: { $geometry: ardon } } }, (err, user) => {
     if (err) {
       console.log(err)
       return res.send(err)
