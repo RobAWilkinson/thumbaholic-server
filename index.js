@@ -26,8 +26,7 @@ const Location = new mongoose.Schema({
 }, { _id: false })
 var userSchema = new mongoose.Schema({
   id: String,
-  location: Location,
-  pastLocations: [Location]
+  location: Location
 })
 userSchema.index({ 'location.point': '2dsphere' })
 userSchema.plugin(findOrCreate)
@@ -142,7 +141,6 @@ var apple = {
     ]
   ]
 }
-let users = []
 app.get('/locations', (req, res) => {
   User.find({}, (err, users) => {
     if (err) {
@@ -150,12 +148,6 @@ app.get('/locations', (req, res) => {
     }
     return res.json(users)
   })
-})
-app.get('/ping', (req, res) => {
-  wss.clients.forEach(ws => {
-    ws.send('message')
-  })
-  res.send('success')
 })
 app.get('/southern', (req, res) => {
   User.find({ 'location.point': { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
@@ -188,6 +180,7 @@ app.get('/northern', (req, res) => {
     }
   })
 })
+
 app.get('/stages/:number', (req, res, next) => {
   var value = [1, 2, 3][Math.floor(Math.random() * 2)]
   if (req.params.number == 1) {
@@ -231,6 +224,10 @@ app.get('/stages/:number', (req, res, next) => {
   }
 })
 
+app.get('/connections', (req, res, next) => {
+  res.send({ length: wss.clients.length })
+})
+
 wss.on('connection', function connection (ws) {
   var location = url.parse(ws.upgradeReq.url, true)
   // you might use location.query.access_token to authenticate or share sessions
@@ -238,20 +235,12 @@ wss.on('connection', function connection (ws) {
   ws.on('message', function incoming (message) {
     console.log('received a websocket message')
     let data = JSON.parse(message)
-    users.push(data)
     console.log(data)
     User.findOrCreate({id: data.id}, function (err, user, created) {
       if (err) {
         console.log(err)
       } else {
         let coordinates = [data.longitude, data.latitude]
-        user.pastLocations.push({
-          timestamp: Date.now(),
-          point: {
-            coordinates: coordinates,
-            type: 'Point'
-          }
-        })
         user.location = {
           timestamp: Date.now(),
           point: {
