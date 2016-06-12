@@ -123,7 +123,7 @@ app.get('/ping', (req, res) => {
   res.send('success')
 })
 app.get('/southern', (req, res) => {
-  User.find({ location: { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+  User.find({ 'location.point': { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
     if (err) {
       console.log(err)
       return res.send(err)
@@ -133,7 +133,7 @@ app.get('/southern', (req, res) => {
   })
 })
 app.get('/ardon' , (req, res) => {
-  User.find({ location: { $geoWithin: { $geometry: ardon } } }, (err, user) => {
+  User.find({ 'location.point': { $geoWithin: { $geometry: ardon } } }, (err, user) => {
     if (err) {
       console.log(err)
       return res.send(err)
@@ -144,7 +144,7 @@ app.get('/ardon' , (req, res) => {
 })
 
 app.get('/northern', (req, res) => {
-  User.find({ location: { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
+  User.find({ 'location.point': { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
     if (err) {
       console.log(err)
       return res.send(err)
