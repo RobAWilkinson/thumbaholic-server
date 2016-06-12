@@ -232,11 +232,13 @@ wss.on('connection', function connection (ws) {
   var location = url.parse(ws.upgradeReq.url, true)
   // you might use location.query.access_token to authenticate or share sessions
   // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+  var id
   ws.on('message', function incoming (message) {
     console.log('received a websocket message')
     let data = JSON.parse(message)
     console.log(data)
-    User.findOrCreate({id: data.id}, function (err, user, created) {
+    id = data.id
+    User.findOrCreate({ id}, function (err, user, created) {
       if (err) {
         console.log(err)
       } else {
@@ -255,6 +257,15 @@ wss.on('connection', function connection (ws) {
         })
       }
     })
+  })
+  ws.on('close', () => {
+    if (id) {
+      User.remove({id: id}, (err, user) => {
+        if (err) {
+          console.log(err)
+        }
+      })
+    }
   })
 })
 
