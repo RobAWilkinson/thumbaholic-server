@@ -12,8 +12,8 @@ var findOrCreate = require('mongoose-findorcreate')
 var GeoJSON = require('mongoose-geojson-schema')
 
 let dbURL
-if (process.env.MONGO_URI) {
-  dbURL = process.env.MONGO_URI
+if (process.env.MONGODB_URI) {
+  dbURL = process.env.MONGODB_URI
 } else {
   dbURL = 'mongodb://localhost:27017/thumbaholic'
 }
