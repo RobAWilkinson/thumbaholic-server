@@ -58,29 +58,28 @@ var apple = {
   'coordinates': [
     [
       [
-        -122.08145141601561,
-        37.14608745948667
+        -129.7265625,
+        21.94304553343818
       ],
       [
-        -122.08145141601561,
-        37.45959832290546
+        -129.7265625,
+        47.98992166741417
       ],
       [
-        -121.67083740234375,
-        37.45959832290546
+        -41.484375,
+        47.98992166741417
       ],
       [
-        -121.67083740234375,
-        37.14608745948667
+        -41.484375,
+        21.94304553343818
       ],
       [
-        -122.08145141601561,
-        37.14608745948667
+        -129.7265625,
+        21.94304553343818
       ]
     ]
   ]
 }
-let connections = []
 let users = []
 app.get('/locations', (req, res) => {
   User.find({}, (err, users) => {
@@ -91,8 +90,7 @@ app.get('/locations', (req, res) => {
   })
 })
 app.get('/ping', (req, res) => {
-  console.log(connections.length)
-  connections.forEach(ws => {
+  wss.clients.forEach(ws => {
     ws.send('message')
   })
   res.send('success')
@@ -163,7 +161,7 @@ wss.on('connection', function connection (ws) {
   var location = url.parse(ws.upgradeReq.url, true)
   // you might use location.query.access_token to authenticate or share sessions
   // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-
+  connections.push(ws)
   ws.on('message', function incoming (message) {
     console.log('received a websocket message')
     let data = JSON.parse(message)
