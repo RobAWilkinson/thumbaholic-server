@@ -192,7 +192,7 @@ app.get('/northern', (req, res) => {
 app.get('/stages/:number', (req, res, next) => {
   var value = [1, 2, 3][Math.floor(Math.random() * 2)]
   if (req.params.number == 1) {
-    return User.find({ 'location.point': { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
+    return User.find({ 'location.point': { $geoWithin: { $geometry: northernHalf } } }, (err, users) => {
       var area = geojsonArea.geometry(northernHalf)
 
       if (err) {
@@ -204,7 +204,7 @@ app.get('/stages/:number', (req, res, next) => {
     })
   }
   if (req.params.number == 2) {
-    User.find({ 'location.point': { $geoWithin: { $geometry: southernHalf } } }, (err, user) => {
+    User.find({ 'location.point': { $geoWithin: { $geometry: southernHalf } } }, (err, users) => {
       var area = geojsonArea.geometry(southernHalf)
       if (err) {
         console.log(err)
@@ -217,13 +217,14 @@ app.get('/stages/:number', (req, res, next) => {
   }
   if (req.params.number == 3) {
     console.log(apple)
-    User.find({ 'location.point': { $geoWithin: { $geometry: ardon } } }, (err, user) => {
+    User.find({ 'location.point': { $geoWithin: { $geometry: ardon } } }, (err, users) => {
       var area = geojsonArea.geometry(southernHalf)
       console.log(area)
       if (err) {
         console.log(err)
         return res.send(err)
       } else {
+        console.log(users)
         // res.json(user)
         res.json({ value: users.length, timestamp: new Date() })
       }
