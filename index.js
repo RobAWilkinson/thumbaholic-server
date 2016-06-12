@@ -36,22 +36,58 @@ userSchema.plugin(findOrCreate)
 var User = mongoose.model('users', userSchema)
 
 var southernHalf = {
-  coordinates: [
+  'type': 'Polygon',
+  'coordinates': [
     [
-      [-118.252903, 34.053053 ], [-118.251739, 34.052379 ],
-      [-118.252657, 34.051472 ], [ -118.253722, 34.052210], [-118.252903, 34.053053 ]
+      [
+        -118.25203478336334,
+        34.05314609768037
+      ],
+      [
+        -118.25160026550293,
+        34.05289275967877
+      ],
+      [
+        -118.25160294771193,
+        34.05225718907956
+      ],
+      [
+        -118.25286358594893,
+        34.052666088193554
+      ],
+      [
+        -118.25203478336334,
+        34.05314609768037
+      ]
     ]
-  ],
-  type: 'Polygon'
+  ]
 }
 var northernHalf = {
-  coordinates: [
+  'type': 'Polygon',
+  'coordinates': [
     [
-      [-118.252903, 34.053053 ], [-118.251739, 34.052379 ],
-      [-118.251270, 34.053079 ], [-118.252210, 34.053790 ], [-118.252903, 34.053053 ]
+      [
+        -118.25203478336334,
+        34.05314609768037
+      ],
+      [
+        -118.25160562992095,
+        34.05289720421166
+      ],
+      [
+        -118.2512703537941,
+        34.0532816554229
+      ],
+      [
+        -118.2517209649086,
+        34.053577214995286
+      ],
+      [
+        -118.25203478336334,
+        34.05314609768037
+      ]
     ]
-  ],
-  type: 'Polygon'
+  ]
 }
 var ardon = {
   'type': 'Polygon',
@@ -163,7 +199,7 @@ app.get('/stages/:number', (req, res, next) => {
         console.log(err)
         return res.send(err)
       } else {
-        res.json({ value, timestamp: new Date() })
+        res.json({ value: users.length, timestamp: new Date() })
       }
     })
   }
@@ -181,7 +217,7 @@ app.get('/stages/:number', (req, res, next) => {
   }
   if (req.params.number == 3) {
     console.log(apple)
-    User.find({ 'location.point': { $geoWithin: { $geometry: apple } } }, (err, user) => {
+    User.find({ 'location.point': { $geoWithin: { $geometry: ardon } } }, (err, user) => {
       var area = geojsonArea.geometry(southernHalf)
       console.log(area)
       if (err) {
@@ -189,7 +225,7 @@ app.get('/stages/:number', (req, res, next) => {
         return res.send(err)
       } else {
         // res.json(user)
-        res.json({ value, timestamp: new Date() })
+        res.json({ users.length, timestamp: new Date() })
       }
     })
   }
