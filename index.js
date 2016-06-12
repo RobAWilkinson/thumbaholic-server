@@ -164,6 +164,7 @@ wss.on('connection', function connection (ws) {
   // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
   ws.on('message', function incoming (message) {
+    console.log('received a websocket message')
     let data = JSON.parse(message)
     users.push(data)
     console.log(data)
