@@ -117,7 +117,7 @@ app.get('/northern', (req, res) => {
   })
 })
 app.get('/stages/:number', (req, res, next) => {
-  var value = [1, 2, 3][Math.floor(Math.random() * 3)]
+  var value = [1, 2, 3][Math.floor(Math.random() * 2)]
   if (req.params.number == 1) {
     return User.find({ 'location.point': { $geoWithin: { $geometry: northernHalf } } }, (err, user) => {
       var area = geojsonArea.geometry(northernHalf)
