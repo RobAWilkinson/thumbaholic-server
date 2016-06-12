@@ -128,7 +128,7 @@ app.get('/stages/:number', (req, res, next) => {
       } else {
         console.log(area)
         console.log()
-        res.json(user)
+        res.json({ value: 'hot', timestamp: new Date() })
       }
     })
   }
