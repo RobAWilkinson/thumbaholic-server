@@ -260,6 +260,7 @@ wss.on('connection', function connection (ws) {
   })
   ws.on('close', () => {
     if (id) {
+      // clean up and remove the user from the DB
       User.remove({id: id}, (err, user) => {
         if (err) {
           console.log(err)
