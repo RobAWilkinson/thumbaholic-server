@@ -1,0 +1,3 @@
+`Npm install`
+
+`npm start`
